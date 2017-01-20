@@ -2,120 +2,11 @@
 import sys, os, math
 import mol2
 import sph_lib
+import dx_gist_lib as dxlib 
 
 # this is written by Trent Balius in the Shoichet Lab
 # written in march, 2016
 #
-
-
-def read_in_dx_file(file):
-
-  fileh = open(file,'r')
-
-  flag_read_dx = False
-
-  count = 0
-
-  values = []
-  for line in fileh:
-      splitline = line.split()
-
-      #print splitline
-      #if len(splitline) < 2:
-      if len(splitline) == 0:
-          #print line
-          continue
-
-      ## this should be line 1
-      if (splitline[0] == "object" and splitline[1] == "1"):
-         print "count = ", count, " line = ", line
-         xn = int(splitline[5])
-         yn = int(splitline[6])
-         zn = int(splitline[7])
-         
-      ## this should be line 2       
-      if (splitline[0] == "origin"):
-         #print line
-         print "count = ", count, " line = ", line
-         origin = [float(splitline[1]), float(splitline[2]), float(splitline[3])] 
-
-      ## this should be lines 3-5
-      if (splitline[0] == "delta"):
-         #print line
-         print "count = ", count, " line = ", line
-         if (float(splitline[2]) == 0 and  float(splitline[3]) ==0):
-            dx = float(splitline[1]) 
-         elif (float(splitline[1]) == 0 and  float(splitline[3]) ==0):
-            dy = float(splitline[2]) 
-         elif (float(splitline[1])== 0 and  float(splitline[2])==0):
-            dz = float(splitline[3]) 
-            print dx, dy, dz 
-
-
-      if (splitline[0] == "object" and splitline[1] == "2"):
-         #print line
-         print "count = ", count, " line = ", line
-      if (splitline[0] == "object" and splitline[1] == "3"):
-         #print line
-         print "count = ", count, " line = ", line
-         flag_read_dx = True
-         continue # go to next line
-      if (flag_read_dx):
-
-         if (len(splitline) > 3): 
-            print "Error: dx formate problem. more than 3 colums"
-            exit()
-
-         for value in splitline:
-             values.append(float(value))  
-
-      count = count + 1
-
-
-  print len(values)
-  fileh.close()
-  return xn,yn,zn,dx,dy,dz,origin,values 
-
-def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
-
-   
-  fileh = open(file,'w')
-#object 1 class gridpositions counts 40 40 40
-#origin 35.31 27.576 18.265
-#delta 0.5 0 0
-#delta 0 0.5 0
-#delta 0 0 0.5
-#object 2 class gridconnections counts 40 40 40
-#object 3 class array type float rank 0 items 64000 data follows
-
-  fileh.write('object 1 class gridpositions counts %d %d %d\n' % (xn,yn,zn))
-  fileh.write('origin %6.3f %6.3f %6.3f\n' % (origin[0],origin[1],origin[2]))
-  fileh.write('delta %6.3f 0 0\n' % dx)
-  fileh.write('delta 0 %6.3f 0\n' % dy)
-  fileh.write('delta 0 0 %6.3f\n' % dz)
-  fileh.write('object 2 class gridconnections counts %d %d %d\n' % (xn,yn,zn))
-  fileh.write('object 3 class array type float rank 0 items %d data follows\n' % len(values))
-
-  count = 1
-  for value in values:
-       if (value == 0.0): 
-          fileh.write('%d' % 0)
-       else:
-          fileh.write('%f' % value)
-       # print newline after 3rd number.
-       if (count == 3): 
-            fileh.write('\n')
-            count = 0
-       # print space after number but not at the end of the line.
-       else:
-            fileh.write(' ')
-       count = count + 1
-
-  # if the last line has less than 3 numbers then print the a newline.
-  if (count < 3):
-       fileh.write('\n')
-  fileh.close()
-
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
@@ -281,7 +172,7 @@ def main():
    print infiledx
    print infilesph
 
-   xn,yn,zn,dx,dy,dz,origin,values = read_in_dx_file(infiledx)
+   xn,yn,zn,dx,dy,dz,origin,values = dxlib.read_in_dx_file(infiledx)
 
    gridscale = dx # assumes that they are all the same spaceing
    
@@ -292,7 +183,7 @@ def main():
 
    count = 0
    new_values = calc_score(outfile,values,gridscale,xn,yn,zn,origin, sphs, file1, True)
-   write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
+   dxlib.write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
    file1.close()
 main()
 

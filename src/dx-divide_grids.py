@@ -1,6 +1,6 @@
 
 import sys, os
-import dx_gist_lib as dx
+import dx_gist_lib as dxlib
 # this is written by Trent Balius in the Shoichet Lab
 # written in 2015
 #
