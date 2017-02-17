@@ -228,18 +228,11 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
         #print "size =", size
         #print "size of points = ", len(gpoints)
         
-        #for nb in niegh_new:
-        #for nb in gpoints:
-        #    print nb
-	new_distances = []
-	for dist in distances:
-		ndist = gspace*dist
-		new_distances.append(ndist)
         if len(gpoints)>400:
            #print "len(gpoints)>400"
            exit()
 
-    return gpoints, new_distances
+    return gpoints, distances
 
 ##########################################
 
