@@ -146,7 +146,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
                     dist = distance([x,y,z],[atom.X,atom.Y,atom.Z])
                     if (dist <= radius):
                         #count = i*((xn)**2)+j*(xn) + k
-                        count = i*(yn*zn)+j*(yn) + k
+                        count = i*(yn*zn)+j*(zn) + k
                         if not (count in dict_gridpoint):
                            dict_gridpoint[count] = [atom_i]
                         else:

@@ -201,6 +201,7 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
             if InSPH(centerind,(radius/gspace),index):
                gpoints.append(index)
                dist = calc_distance(centerind,index)
+               dist = gspace * dist  # converts from grid point to angstroms. 
                distances.append(dist)
                #if index in niegh_new:
                #   print "index in niegh_new"
