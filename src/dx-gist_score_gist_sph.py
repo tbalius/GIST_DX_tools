@@ -2,6 +2,7 @@
 import sys, os, math
 import mol2
 import sph_lib
+import pdb_lib
 import dx_gist_lib as dxlib 
 
 # this is written by Trent Balius in the Shoichet Lab
@@ -68,15 +69,15 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
            exit()
 
         radius_gridpoint = math.ceil(radius / gridscale) + 1
-        #print radius, gridscale, radius_gridpoint
+        print radius, gridscale, radius_gridpoint
         #print  grid_i,grid_j, grid_k
 
         start_i = max([(grid_i - radius_gridpoint),0.0])
         stop_i  = min([(grid_i + radius_gridpoint),xn])
         start_j = max([(grid_j - radius_gridpoint),0.0])
-        stop_j  = min([(grid_j + radius_gridpoint),xn])
+        stop_j  = min([(grid_j + radius_gridpoint),yn])
         start_k = max([(grid_k - radius_gridpoint),0.0])
-        stop_k  = min([(grid_k + radius_gridpoint),xn])
+        stop_k  = min([(grid_k + radius_gridpoint),zn])
 
         for i in range(int(start_i),int(stop_i)): # looping over the cube about the center of the atom 
             x = (i * gridscale) + origin[0] 
@@ -134,10 +135,11 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
     fileh.write('%s,%f\n'%("boxV",boxV))
     fileh.write('%s,%f\n'%("molV",molV))
 
+    atom_energies = []
     for i,atom in enumerate(sphs):
         print i,":",sum_per_atom[i]*voxel_vol
         fileh.write('atom%d,%f\n'%(i+1,sum_per_atom[i]*voxel_vol))
-
+        atom_energies.append(sum_per_atom[i]*voxel_vol)
 
     new_values = []
     # make a new grid with only the voxels in the ligand are non-zerro
@@ -152,7 +154,39 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
             else:
                new_values.append(0.0)
 
-    return new_values
+    return new_values, atom_energies 
+
+def extract_fileprefix_from_path(filepath):
+
+   filename = filepath.split('/')[-1] # split dx filename on "/"
+   splitfilename   = filename.split('.') 
+   if (len(splitfilename)>2): 
+       print "In path "+filepath+" filename has too many periods. . ."
+       exit()
+   return splitfilename[0]
+
+def convert_sph_to_pdb_and_write(sphs,energies,pdbfilename):
+
+   molname = "CLU"
+   chainid = "A"   
+   resname = "CLU"
+   resnum  = 1
+   atomname = "O"
+
+   i = 0
+   atoms = []
+   for sph in sphs:
+      atomnum  = sph.atomnum
+      X = sph.X
+      Y = sph.Y
+      Z = sph.Z
+      bfact = energies[i]
+      boolhet = False
+      atom = pdb_lib.PDB_atom_info(molname, chainid, resname, resnum, atomname, atomnum, X, Y, Z, bfact, boolhet) 
+      atoms.append(atom)
+      i=i+1
+   pdb_lib.output_pdb(atoms,pdbfilename)
+
 
 def main():
 
@@ -167,7 +201,11 @@ def main():
 
    infiledx      = sys.argv[1]
    infilesph     = sys.argv[2]
-   outfile       = "out"
+
+   prefixdx = extract_fileprefix_from_path(infiledx)
+   prefixsph = extract_fileprefix_from_path(infilesph)
+
+   outfile       = "site_energetics_dx-"+prefixdx+"sph-"+prefixsph
 
    print infiledx
    print infilesph
@@ -181,9 +219,9 @@ def main():
 
    file1 = open(outfile+'gist_values.txt','w')
 
-   count = 0
-   new_values = calc_score(outfile,values,gridscale,xn,yn,zn,origin, sphs, file1, True)
-   dxlib.write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
+   new_values, atom_energies  = calc_score(outfile+'.txt',values,gridscale,xn,yn,zn,origin, sphs, file1, True)
+   dxlib.write_out_dx_file(outfile+'.dx',xn,yn,zn,dx,dy,dz,origin,new_values)
+   convert_sph_to_pdb_and_write(sphs,atom_energies,outfile+'.pdb')
    file1.close()
 main()
 
