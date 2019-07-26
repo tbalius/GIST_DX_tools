@@ -55,11 +55,14 @@ def read_in_dx_file(file):
       if (splitline[0] == "object" and splitline[1] == "2"):
          #print line
          print "count = ", count, " line = ", line
-      if (splitline[0] == "object" and splitline[1] == "3"):
+      elif (splitline[0] == "object" and splitline[1] == "3"):
          #print line
          print "count = ", count, " line = ", line
          flag_read_dx = True
          continue # go to next line
+      elif (splitline[0] == "object" ):
+         print " line = ", line
+         continue
       if (flag_read_dx):
 
          if (len(splitline) > 3): 
