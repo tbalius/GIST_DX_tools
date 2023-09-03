@@ -352,7 +352,9 @@ def main():
    print infilemol2
 
    #vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
-   vdwdict = intialize_vdw_parm('/home/baliuste/zzz.github/DOCK/ucsfdock/proteins/defaults/vdw.parms.amb.mindock') 
+   #vdwdict = intialize_vdw_parm('/home/baliuste/zzz.github/DOCK/ucsfdock/proteins/defaults/vdw.parms.amb.mindock') 
+   DOCKpath = os.getenv('DOCKBASE')
+   vdwdict = intialize_vdw_parm(DOCKpath+'/proteins/defaults/vdw.parms.amb.mindock') 
    xn,yn,zn,dx,dy,dz,origin,values = read_in_dx_file(infiledx)
 
    gridscale = dx # assumes that they are all the same spaceing
