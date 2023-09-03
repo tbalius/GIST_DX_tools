@@ -24,7 +24,8 @@ def intialize_vdw_parm(vdwfile):
         else: 
            r = (math.sqrt(2.0)*a/b)**(1.0/3.0)/2.0 # radius
         print t,a,b,r
-        vdw_dict[t] = r
+        #vdw_dict[t] = r
+        vdw_dict[t] = round(r,3)
     return vdw_dict
 
 def get_radius(type,vdw_dict):
@@ -232,7 +233,8 @@ def main():
    print infiledx
    print infilemol2
 
-   vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
+   #vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
+   vdwdict = intialize_vdw_parm('/home/baliuste/zzz.github/DOCK/ucsfdock/proteins/defaults/vdw.parms.amb.mindock') 
    xn,yn,zn,dx,dy,dz,origin,values = dxlib.read_in_dx_file(infiledx)
 
    gridscale = dx # assumes that they are all the same spaceing

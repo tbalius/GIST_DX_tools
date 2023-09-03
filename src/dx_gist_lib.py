@@ -137,8 +137,8 @@ def combine_values(file,xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1,w1,xn2,yn2,zn2,d
 
     new_values = []
     for i in range(len(values2)):
-        if (values1[i] == 0 or values2[i] == 0):
-        #if (values1[i] == 0 and values2[i] == 0):
+        #if (values1[i] == 0 or values2[i] == 0):
+        if (values1[i] == 0 and values2[i] == 0): # change requested by Mossa Ghattas & Reed Stien. 
             value = 0.0
         else:
             value = w1*values1[i] + w2*values2[i]+c3

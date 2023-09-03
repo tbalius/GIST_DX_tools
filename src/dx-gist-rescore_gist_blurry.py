@@ -23,6 +23,7 @@ def intialize_vdw_parm(vdwfile):
         else: 
            r = (math.sqrt(2.0)*a/b)**(1.0/3.0)/2.0 # radius
         print t,a,b,r
+        #vdw_dict[t] = round(r,3)
         vdw_dict[t] = r
     return vdw_dict
 
@@ -195,7 +196,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
 
     dict_gridpoint = {} # for each grid point have a list of atoms it is in
 
-    
+    gaus_val = 0.0 
     sum_per_atom = []
     for atom_i,atom in enumerate(mol.atom_list):
         sum_per_atom.append(0.0)
@@ -208,6 +209,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
         else:
            radius = vdw_dict[dt[atom_i]]
         #print atom.type, atom.X, atom.Y, atom.Z, atom.type, dt[atom_i], radius
+        print( atom.type, dt[atom_i], radius)
 
         grid_i = round((atom.X - origin[0] ) / gridscale)
         grid_j = round((atom.Y - origin[1] ) / gridscale)
@@ -246,13 +248,16 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
                     z = (k * gridscale) + origin[2]
                     dist = distance([x,y,z],[atom.X,atom.Y,atom.Z])
                     if (dist <= radius):
-                        if not (count in dict_gridpoint):
-                           dict_gridpoint[count] = [atom_i]
-                        else:
-                           dict_gridpoint[count].append(atom_i)
+                        count2 = i*((yn)*(zn))+j*(zn) + k
+                        print (count,count2,count-count2)
+                        #if not (count in dict_gridpoint):
+                        #   dict_gridpoint[count] = [atom_i]
+                        #else:
+                        #   dict_gridpoint[count].append(atom_i)
                     count = count+1
 
         '''
+        atom_val = 0.0
         for i in range(int(start_i),int(stop_i)): # looping over the cube about the center of the atom 
             x = (i * gridscale) + origin[0] 
             for j in range(int(start_j),int(stop_j)):
@@ -261,24 +266,34 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
                     z = (k * gridscale) + origin[2] 
                     dist = distance([x,y,z],[atom.X,atom.Y,atom.Z])
                     if (dist <= radius):
+                    #if (dist < radius):
                         #count = i*((xn)**2)+j*(xn) + k
 			scale = cal_gausian(dist, radius/2.0)
-                        count = i*(yn*zn)+j*(zn) + k
+                        count = i*((yn)*(zn))+j*(zn) + k
+                        gaus_val = gaus_val + scale*values[count] 
+                        atom_val = atom_val + scale*values[count] 
                         if not (count in dict_gridpoint):
                            dict_gridpoint[count] = [[atom_i, scale]]
                         else:
+                           #print("append")
                            dict_gridpoint[count].append([atom_i, scale])
+        print ("atom_val = %f"%atom_val)
+    print ("gaus_val = %f"%gaus_val)
+    voxel_vol =  gridscale**3.0
+    print ("vol*gaus_val = %f"%(voxel_vol*gaus_val))
 
     sum_val = 0
     sum_val_positive = 0
     sum_val_negative = 0
-    voxel_vol =  gridscale**3.0
+    #voxel_vol =  gridscale**3.0
     # loop over all displaced grid points.
     for key in dict_gridpoint.keys():
+        #print(key)
 	key_sum = 0
         for atom_i, scale  in dict_gridpoint[key]:
 		key_sum += -voxel_vol*values[key]*scale
-		sum_val = sum_val + -1.*values[key]*scale 
+		sum_val = sum_val + -1.*values[key]*scale
+        #print ("key %d (%d) : val = %f, grid_val = %f"%(key,len(dict_gridpoint[key]),key_sum,values[key])) 
 
     print "gist_val:", sum_val*voxel_vol
     
@@ -288,7 +303,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
     # make a new grid with only the voxels in the ligand are non-zerro
 
     if (return_vals):
-        new_values = []
+        #new_values = []
         for i,val in enumerate(values):
             #if i in dict_gridpoint.keys():
             if i in dict_gridpoint:
@@ -296,7 +311,25 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
             else:
                new_values.append(0.0)
 
-    return new_values
+    # write out the scale for visulization of blur
+    new_weights = []
+    if (return_vals):
+        for i in range(len(values)):
+            #if i in dict_gridpoint.keys():
+            if i in dict_gridpoint:
+               sum_scale = 0.0
+               #new_values.append(1.0)
+               for atom_i, scale  in dict_gridpoint[i]:
+                   #print(i,atom_i, scale)
+                   sum_scale = sum_scale + scale
+               #print("sum",sum_scale)
+               new_weights.append(sum_scale)
+            else:
+               new_weights.append(0.0)
+
+
+
+    return new_values, new_weights
 
 def main():
 
@@ -318,7 +351,8 @@ def main():
    print infiledx
    print infilemol2
 
-   vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
+   #vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
+   vdwdict = intialize_vdw_parm('/home/baliuste/zzz.github/DOCK/ucsfdock/proteins/defaults/vdw.parms.amb.mindock') 
    xn,yn,zn,dx,dy,dz,origin,values = read_in_dx_file(infiledx)
 
    gridscale = dx # assumes that they are all the same spaceing
@@ -331,10 +365,11 @@ def main():
    count = 0
    for mol in mols:
       file1.write(mol.name+"\t")
-      new_values = calc_score(outfile,values,gridscale,xn,yn,zn,origin, mol,vdwdict,file1,(N<3),Hchoice)
-      #if N < 3: # only print gist grids if there are a few poses in the mol2 file
+      new_values,weights = calc_score(outfile,values,gridscale,xn,yn,zn,origin, mol,vdwdict,file1,(N<3),Hchoice)
+      if N < 3: # only print gist grids if there are a few poses in the mol2 file
        #  print "writting gist grid for overlap with ligand . . ."
-         #write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
+         write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
+         write_out_dx_file(outfile +str(count) +"new_weights.dx",xn,yn,zn,dx,dy,dz,origin,weights)
       count=count+1
       #exit()
    file1.close()
