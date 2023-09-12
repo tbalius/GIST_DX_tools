@@ -105,6 +105,10 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
            print "ERROR. . . "
            exit()
 
+        if (grid_i>xn or grid_j>yn or grid_k>zn):
+           print "ERROR. outside grid "
+           exit()
+
         radius_gridpoint = math.ceil(radius / gridscale) + 1
         #print radius, gridscale, radius_gridpoint
         #print  grid_i,grid_j, grid_k
@@ -162,6 +166,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
     # loop over all displaced grid points.
     for key in dict_gridpoint.keys():
         # sum up total value as well as positive, and negative contrabutions.   
+
         sum_val = sum_val + values[key]
         if values[key] > 0:
            sum_val_positive = sum_val_positive + values[key]

@@ -22,6 +22,7 @@ import dx_gist_lib as dxlib
 ######################################################################
 
 def pre_compute(file,xn,yn,zn,dx,dy,dz,origin,values,radius,divider,pad_radius):
+#   print " in pre_compute "
 # file - log file
 # values gist values 
 # gridscale - the grid spacing
@@ -162,7 +163,7 @@ def get_neighbors(cgpind):
 
 ######################################
 def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
-    #print " IN get_points_in_Sph"
+#    print " IN get_points_in_Sph"
     #cgpind = [0.0, 0.0, 0.0]
     # center is the center of the sphere, in this it is a grid point already
     #cgpind[0] = round((center[0]-origin[0])/nx) # closesed gridpoint index
@@ -287,6 +288,8 @@ def main():
 
    print infile1
    print sphradius
+   print divider
+   print pad_radius
    print outfile
 
    #exit()
