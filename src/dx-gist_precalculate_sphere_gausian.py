@@ -273,6 +273,8 @@ def main():
    if len(sys.argv) != 6: # if no input
        print "ERORR:"
        print "syntex: dx-gist_precalculate_sphere.py infile sphradius divider pad_radius outfileprefix"
+       print "divider is used to calculate sigma:  sigma = radius/divider "
+       print "pad_radius this is the amount the grid is reduced in all directions.  pad_radius should be larger than sphradius. "
        return
  
 
