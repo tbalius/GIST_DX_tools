@@ -4,11 +4,9 @@ import mol2
 import pdb_lib as pdb
 import dx_gist_lib as dxlib
 
-##### NOT WORKING YET ... ######
-
-# this is written by Trent Balius in the Shoichet Lab
+# This is written by Trent Balius in the Shoichet Lab
 # written in march, 2016
-# modifed in 2023/10
+# modifed in 2023/10 by Trent Balius at the FNLCR
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
