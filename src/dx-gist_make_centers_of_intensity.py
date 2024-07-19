@@ -87,7 +87,8 @@ def write_pdb(points,fileh):
 
     count = 0
     for point in points:
-        fileh.write("ATOM  %5d  %-3s %3s %1s %3d %11.3f %7.3f %7.3f %5.2f\n" % (count, "CA", "CLU", "A", point.C, point.X, point.Y, point.Z, point.V/100.0 ))
+        #fileh.write("ATOM  %5d  %-3s %3s %1s %3d %11.3f %7.3f %7.3f %5.2f\n" % (count, "CA", "CLU", "A", point.C, point.X, point.Y, point.Z, point.V/100.0 ))
+        fileh.write("ATOM  %5d  %-3s %3s %1s%4d %11.3f %7.3f %7.3f %5.2f\n" % (count, "CA", "CLU", "A", point.C, point.X, point.Y, point.Z, point.V/100.0 ))
         count = count + 1
        
 ######################################################################
