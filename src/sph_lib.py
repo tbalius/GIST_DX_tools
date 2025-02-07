@@ -73,13 +73,13 @@ def read_sph(filename,ccluster,color):
           if ccluster == 'A': 
              flag_cluster = True
           elif int(ccluster) == cluster:
-             print "cluster", int(ccluster), cluster
+             print ("cluster", int(ccluster), cluster)
              flag_cluster = True
           else:
              flag_cluster = False
        elif not (line[0:5].replace(' ','').isdigit()):
             #print line[0:5], line[0:5].replace(' ','').isdigit()
-            print line
+            print (line)
        else:
           index   = int(line[0:5])
           x       = float(line[5:15])
@@ -88,7 +88,7 @@ def read_sph(filename,ccluster,color):
           r       = float(line[35:43])
           if (r == 0.0): 
               r = 0.5
-              print "radius of 0.0 detected.  changed to 0.5."
+              print ("radius of 0.0 detected.  changed to 0.5.")
           
           atomnum = int(line[43:48])
           #print '\'' + line[48:50] + '\'' 
@@ -119,7 +119,7 @@ def read_sph(filename,ccluster,color):
     remove_dullicates(sphere_list)
 
     if len(sphere_list) == 0:
-       print "there is a problem"
+       print ("there is a problem")
 
     return sphere_list
 

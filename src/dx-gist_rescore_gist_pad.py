@@ -23,7 +23,7 @@ def intialize_vdw_parm(vdwfile):
            r = 0.5
         else: 
            r = (math.sqrt(2.0)*a/b)**(1.0/3.0)/2.0 # radius
-        print t,a,b,r
+        print (t,a,b,r)
         vdw_dict[t] = r
     return vdw_dict
 
@@ -32,7 +32,7 @@ def get_radius(type,vdw_dict):
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
-       print "error" 
+       print ("error" )
        exit()
     dist = 0.0
     for i in range(len(v1)):
@@ -70,7 +70,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
 
 
     if Hchoice !=0 and Hchoice !=1 and Hchoice !=2: 
-       print "Hchoice must be 0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)"
+       print ("Hchoice must be 0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)")
        exit()
 
     dt   = mol2.convert_sybyl_to_dock(mol) # get dock atom types.
@@ -102,11 +102,11 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
         grid_k = round((atom.Z - origin[2] ) / gridscale)
 
         if (grid_i<0.0 or grid_j<0.0 or grid_k<0.0):
-           print "ERROR. . . "
+           print ("ERROR. . . ")
            exit()
 
         if (grid_i>xn or grid_j>yn or grid_k>zn):
-           print "ERROR. outside grid "
+           print ("ERROR. outside grid ")
            exit()
 
         radius_gridpoint = math.ceil(radius / gridscale) + 1
@@ -188,11 +188,11 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
 
     molV = float(molN)/float(boxN)*boxV
 
-    print "gist_val:", sum_val*voxel_vol
-    print "gist_val_positive:", sum_val_positive*voxel_vol
-    print "gist_val_negative:", sum_val_negative*voxel_vol
-    print "molN=",molN,"  boxN=",boxN,"  boxV=",boxV
-    print "molV=",molV
+    print ("gist_val:", sum_val*voxel_vol                    )
+    print ("gist_val_positive:", sum_val_positive*voxel_vol  )
+    print ("gist_val_negative:", sum_val_negative*voxel_vol  )
+    print ("molN=",molN,"  boxN=",boxN,"  boxV=",boxV        )
+    print ("molV=",molV                                      )
     
     fileh.write('%s,%f\n'%("gist_val", sum_val*voxel_vol))
     fileh.write('%s,%f\n'%("gist_val_positive", sum_val_positive*voxel_vol))
@@ -203,7 +203,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
     fileh.write('%s,%f\n'%("molV",molV))
 
     for i,atom in enumerate(mol.atom_list):
-        print i,":",sum_per_atom[i]*voxel_vol
+        print (i,":",sum_per_atom[i]*voxel_vol)
         fileh.write('atom%d,%f\n'%(i+1,sum_per_atom[i]*voxel_vol))
 
 
@@ -225,12 +225,12 @@ def main():
 
 
    if len(sys.argv) != 5: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_rescore.py dx-file mol2"
-       print "dx-input-file input file in dx formate produed by gist, may be disities or energies"
-       print "mol2 containing docked poses. "
-       print "Hchoice [0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)]"
-       print "radius_pad : if a value of 8.0 is given then 8 angstroms is added to all atom radii"
+       print ("ERORR:"                                                                                          )
+       print ("syntex: dx-gist_rescore.py dx-file mol2"                                                         )
+       print ("dx-input-file input file in dx formate produed by gist, may be disities or energies"             )
+       print ("mol2 containing docked poses. "                                                                  )
+       print ("Hchoice [0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)]" )
+       print ("radius_pad : if a value of 8.0 is given then 8 angstroms is added to all atom radii"             )
        return
  
 
@@ -240,8 +240,8 @@ def main():
    pad           = float(sys.argv[4])
    outfile       = "out"
 
-   print infiledx
-   print infilemol2
+   print (infiledx)
+   print (infilemol2)
 
    DOCKpath = os.getenv('DOCKBASE')
    print (DOCKpath)
@@ -261,7 +261,7 @@ def main():
    for mol in mols:
       new_values = calc_score(outfile,values,gridscale,xn,yn,zn,origin, mol,vdwdict,file1,(N<3),Hchoice,pad)
       if N < 3: # only print gist grids if there are a few poses in the mol2 file
-         print "writting gist grid for overlap with ligand . . ."
+         print ("writting gist grid for overlap with ligand . . .")
          dxlib.write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
       count=count+1
       #exit()

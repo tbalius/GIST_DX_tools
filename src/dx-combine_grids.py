@@ -12,9 +12,9 @@ import dx_gist_lib as dxlib
 def main():
 
    if len(sys.argv) != 7: # if no input
-       print "ERORR:"
-       print "syntex: dx-combine_grids.py gist-Eww-dens.dx 1 gist-gO.dx 1 0.0 temp"
-       print "v[i] = w1*v1[i] + w2*v2[i] + c3"
+       print ("ERORR:")
+       print ("syntex: dx-combine_grids.py gist-Eww-dens.dx 1 gist-gO.dx 1 0.0 temp")
+       print ("v[i] = w1*v1[i] + w2*v2[i] + c3")
        return
  
 

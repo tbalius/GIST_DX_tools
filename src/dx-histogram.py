@@ -11,8 +11,8 @@ import dx_gist_lib as dxlib
 def main():
 
    if len(sys.argv) != 7: # if no input
-       print "ERORR:"
-       print "syntex: dx-histogram.py gistvalues.dx min max num output [vyes,vno]"
+       print ("ERORR:")
+       print ("syntex: dx-histogram.py gistvalues.dx min max num output [vyes,vno]")
        return
  
 
@@ -30,7 +30,7 @@ def main():
    elif verbose == "vno":
        boolverbose = False
    else:
-       print "error: must be vyes,vno"
+       print ("error: must be vyes,vno")
 
    xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1 = dxlib.read_in_dx_file(infile1)
 
@@ -41,15 +41,15 @@ def main():
    midbins    = []
 
    step = (maxv - minv)/float(num)
-   print "infile = %s"%infile1
-   print "minv = %f\nmaxv = %f\n num = %d\n step = %f\n"%(minv,maxv,num,step)
+   print ("infile = %s"%infile1)
+   print ("minv = %f\nmaxv = %f\n num = %d\n step = %f\n"%(minv,maxv,num,step))
    midbin = minv + step/2.0
    for i in range(0,num):
        histogram.append(0)
        histogram_t.append(0)
        histogram_nz.append(0)
        if midbin > maxv: 
-          print "error"
+          print ("error")
           exit()
        midbins.append(midbin)
        midbin = midbin + step
@@ -71,7 +71,7 @@ def main():
            continue
        i = int( round( (val - minv) / (maxv-minv) * (num-1) )) 
        if boolverbose:
-          print "%f->%d->%f"%(val, i, midbins[i])
+          print ("%f->%d->%f"%(val, i, midbins[i]))
        histogram[i] = histogram[i] + 1
        if val != 0.0:
           histogram_nz[i]=histogram_nz[i]+1
@@ -83,9 +83,9 @@ def main():
           histogram_t[in3] = histogram_t[in3]+1
    fh = open(output,'w')
    for i in range(0,num):
-        print "%f, %d,%d,%d"%(midbins[i], histogram[i],histogram_nz[i],histogram_t[i])
+        print ("%f, %d,%d,%d"%(midbins[i], histogram[i],histogram_nz[i],histogram_t[i]))
         fh.write( "%f,%d,%d,%d\n"%(midbins[i], histogram[i],histogram_nz[i],histogram_t[i]))
-   print "number less than min: %d\nnumber grater than max: %d"%(countn,countp)
+   print ("number less than min: %d\nnumber grater than max: %d"%(countn,countp))
 main()
 
 

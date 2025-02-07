@@ -11,7 +11,7 @@ import dx_gist_lib as dxlib
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
-       print "error" 
+       print ("error" )
        exit()
     dist = 0.0
     for i in range(len(v1)):
@@ -65,11 +65,11 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
         grid_k = round((atom.Z - origin[2] ) / gridscale)
 
         if (grid_i<0.0 or grid_j<0.0 or grid_k<0.0):
-           print "ERROR. . . "
+           print ("ERROR. . . ")
            exit()
 
         radius_gridpoint = math.ceil(radius / gridscale) + 1
-        print radius, gridscale, radius_gridpoint
+        print (radius, gridscale, radius_gridpoint)
         #print  grid_i,grid_j, grid_k
 
         start_i = max([(grid_i - radius_gridpoint),0.0])
@@ -121,11 +121,11 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
 
     molV = float(molN)/float(boxN)*boxV
 
-    print "gist_val:", sum_val*voxel_vol
-    print "gist_val_positive:", sum_val_positive*voxel_vol
-    print "gist_val_negative:", sum_val_negative*voxel_vol
-    print "molN=",molN,"  boxN=",boxN,"  boxV=",boxV
-    print "molV=",molV
+    print ("gist_val:", sum_val*voxel_vol                   )
+    print ("gist_val_positive:", sum_val_positive*voxel_vol )
+    print ("gist_val_negative:", sum_val_negative*voxel_vol )
+    print ("molN=",molN,"  boxN=",boxN,"  boxV=",boxV       )
+    print ("molV=",molV                                     )
     
     fileh.write('%s,%f\n'%("gist_val", sum_val*voxel_vol))
     fileh.write('%s,%f\n'%("gist_val_positive", sum_val_positive*voxel_vol))
@@ -137,7 +137,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_val
 
     atom_energies = []
     for i,atom in enumerate(sphs):
-        print i,":",sum_per_atom[i]*voxel_vol
+        print (i,":",sum_per_atom[i]*voxel_vol)
         fileh.write('atom%d,%f\n'%(i+1,sum_per_atom[i]*voxel_vol))
         atom_energies.append(sum_per_atom[i]*voxel_vol)
 
@@ -161,7 +161,7 @@ def extract_fileprefix_from_path(filepath):
    filename = filepath.split('/')[-1] # split dx filename on "/"
    splitfilename   = filename.split('.') 
    if (len(splitfilename)>2): 
-       print "In path "+filepath+" filename has too many periods. . ."
+       print ("In path "+filepath+" filename has too many periods. . .")
        exit()
    return splitfilename[0]
 
@@ -192,10 +192,10 @@ def main():
 
 
    if len(sys.argv) != 3: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_rescore.py dx-file sphere_file"
-       print "dx-input-file input file in dx formate produed by gist, may be disities or energies"
-       print "sphere file that defines the binding site (low dielectric sphere recomended) "
+       print ("ERORR:"                                                                              )
+       print ("syntex: dx-gist_rescore.py dx-file sphere_file"                                      )
+       print ("dx-input-file input file in dx formate produed by gist, may be disities or energies" )
+       print ("sphere file that defines the binding site (low dielectric sphere recomended) "       )
        return
  
 
@@ -207,14 +207,14 @@ def main():
 
    outfile       = "site_energetics_dx-"+prefixdx+"sph-"+prefixsph
 
-   print infiledx
-   print infilesph
+   print (infiledx)
+   print (infilesph)
 
    xn,yn,zn,dx,dy,dz,origin,values = dxlib.read_in_dx_file(infiledx)
 
    gridscale = dx # assumes that they are all the same spaceing
    
-   print gridscale ,xn,yn,zn,dx,dy,dz,origin   
+   print (gridscale ,xn,yn,zn,dx,dy,dz,origin )   
    sphs  = sph_lib.read_sph(infilesph,'A','A')
 
    file1 = open(outfile+'gist_values.txt','w')

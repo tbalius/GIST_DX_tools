@@ -37,14 +37,14 @@ def make_courser(file,values,gridscale,xn,yn,zn,origin,number):
     sum = 0
     for i in range (1,number): 
          sum = sum + i 
-    print "num=",number, 'sum=',sum
+    print ("num=",number, 'sum=',sum)
 
     ox_n =  origin[0] + gridscale / number * sum
     oy_n =  origin[1] + gridscale / number * sum
     oz_n =  origin[2] + gridscale / number * sum
     origin_new = [ox_n,oy_n,oz_n]
 
-    print origin_new
+    print (origin_new)
 
     # here the vector of values is transformed to a multidemitional array (grid)
     grid_old = [] 
@@ -64,7 +64,7 @@ def make_courser(file,values,gridscale,xn,yn,zn,origin,number):
     xnew = int(math.floor(xn / number))
     ynew = int(math.floor(yn / number))
     znew = int(math.floor(zn / number))
-    print xnew,ynew,znew
+    print (xnew,ynew,znew)
     for i in range(xnew):
         ydim = []
         for j in range(ynew):
@@ -79,17 +79,17 @@ def make_courser(file,values,gridscale,xn,yn,zn,origin,number):
     for i in range(xn):
         i_n = int(math.ceil(i/number))
         if (i_n >= xnew): 
-           print "continue"
+           print ("continue")
            continue
         for j in range(yn):
             j_n = int(math.ceil(j/number))
             if (j_n >= ynew): 
-               print "continue"
+               print ("continue")
                continue
             for k in range(zn):
                k_n = int(math.ceil(k/number))
                if (k_n >= znew): 
-                   print "continue"
+                   print ("continue")
                    continue
                grid[i_n][j_n][k_n] = grid[i_n][j_n][k_n] + grid_old[i][j][k]
                #fileh.write("%f = %f * %f +  %f * %f + %f\n" % (value,w1,values1[i],w2,values2[i],c3))
@@ -108,10 +108,10 @@ def make_courser(file,values,gridscale,xn,yn,zn,origin,number):
 def main():
 
    if len(sys.argv) != 4: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_make_courser.py gist-Eww-dens.dx 1 temp"
+       print ("ERORR:")
+       print ("syntex: dx-gist_make_courser.py gist-Eww-dens.dx 1 temp")
        #print "syntex: dx-combine_grids.py gist-Eww-dens.dx 3 temp"
-       print " "
+       print (" ")
        return
  
 

@@ -46,14 +46,14 @@ def cluster_points(points,dist):
             ind_j2 = points[j].J 
             ind_k2 = points[j].K 
             if (math.fabs(ind_i2-ind_i1) + math.fabs(ind_j2-ind_j1) + math.fabs(ind_k2-ind_k1)) == 0:
-                print "Error. same point. duplicate found."
+                print ("Error. same point. duplicate found.")
                 exit()
             if (math.fabs(ind_i2-ind_i1) + math.fabs(ind_j2-ind_j1) + math.fabs(ind_k2-ind_k1)) <= dist: # if 0, they are the same, if grater than dist (one or two, must be an integer) they are not connected.  
                bond = [i, j]
                bonds.append(bond)
                bonded_p[i] = 1
                bonded_p[j] = 1
-               print bond
+               print (bond)
     
     clusters = {}
     count = 0
@@ -74,9 +74,9 @@ def cluster_points(points,dist):
            count = count+1
 
 
-    print clusters           
+    print (clusters)           
     for key in clusters.keys():
-        print key, clusters[key]
+        print (key, clusters[key])
 
     return clusters, count
         
@@ -154,7 +154,7 @@ def make_centers(fileprefix,values,gridscale,xn,yn,zn,origin,sign,threshold,dist
             for k in range(zn):
                 z = (k * gridscale) + origin[2] 
                 if (sign*grid_old[i][j][k] > threshold): # we only use the sign in the comparison with Threshold. 
-                    print x,y,z, grid_old[i][j][k]
+                    print (x,y,z, grid_old[i][j][k])
                     point = Point(x,y,z,i,j,k,grid_old[i][j][k],-1)
                     points.append(point)
 
@@ -168,7 +168,7 @@ def make_centers(fileprefix,values,gridscale,xn,yn,zn,origin,sign,threshold,dist
          points[i].C = c
     write_pdb(points,fileh2)
 
-    print "there are "+ str(count)+" clusters"
+    print ("there are "+ str(count)+" clusters")
 
     # initalize a weight mean cluster point
     weight_mean_points = []
@@ -199,7 +199,7 @@ def make_centers(fileprefix,values,gridscale,xn,yn,zn,origin,sign,threshold,dist
          weight_mean_points[c].X = weight_mean_points[c].X / weight_mean_points[c].V 
          weight_mean_points[c].Y = weight_mean_points[c].Y / weight_mean_points[c].V 
          weight_mean_points[c].Z = weight_mean_points[c].Z / weight_mean_points[c].V 
-         print c, weight_mean_points[c].X, weight_mean_points[c].Y, weight_mean_points[c].Z, weight_mean_points[c].V
+         print (c, weight_mean_points[c].X, weight_mean_points[c].Y, weight_mean_points[c].Z, weight_mean_points[c].V)
 
 
     write_pdb(weight_mean_points,fileh)
@@ -215,18 +215,18 @@ def make_centers(fileprefix,values,gridscale,xn,yn,zn,origin,sign,threshold,dist
 def main():
 
    if len(sys.argv) != 6: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_make_centers.py dx-input-file sign cutoff distint pdb-output-file"
-       print "sign can be 1 or -1: if one should always be used for densities,"
-       print "                     for energies, weight of one means pdb contains cordenates where "
-       print "                     waters do not want to be(anti-waters)."
-       print "                     for energies, weight of negative one means pdb contains cordenates "
-       print "                     where waters do want to be (negative energies)."
-       print "cutoff can only be a positive floating point number. "
-       print "                     this point is used to deterint clusters of points" 
-       print "distint howmeny grid points away considered conected. should be 1 (0.5 angstroms) or 2(1.0 A), 3 (1.5 A)"
-       print "dx-input-file input file in dx formate produed by gist, may be disities or energies"
-       print "pdb-output-file is an output file in pdb formate contains the weighted mean poition of clusters"
+       print ("ERORR:"                                                                                                    )
+       print ("syntex: dx-gist_make_centers.py dx-input-file sign cutoff distint pdb-output-file"                         )
+       print ("sign can be 1 or -1: if one should always be used for densities,"                                          )
+       print ("                     for energies, weight of one means pdb contains cordenates where "                     )
+       print ("                     waters do not want to be(anti-waters)."                                               )
+       print ("                     for energies, weight of negative one means pdb contains cordenates "                  )
+       print ("                     where waters do want to be (negative energies)."                                      )
+       print ("cutoff can only be a positive floating point number. "                                                     )
+       print ("                     this point is used to deterint clusters of points"                                    )
+       print ("distint howmeny grid points away considered conected. should be 1 (0.5 angstroms) or 2(1.0 A), 3 (1.5 A)"  )
+       print ("dx-input-file input file in dx formate produed by gist, may be disities or energies"                       )
+       print ("pdb-output-file is an output file in pdb formate contains the weighted mean poition of clusters"           )
        return
  
 

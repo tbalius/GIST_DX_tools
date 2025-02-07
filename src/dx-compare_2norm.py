@@ -20,9 +20,9 @@ def square_root_sum_of_squares(values):
 def main():
 
    if len(sys.argv) != 4: # if no input
-       print "ERORR:"
-       print "this script caluculates the difference grid and the second norm over the grid. "
-       print "syntex: dx-compare_2norm.py gist-Eww-dens.dx gist-gO.dx diff_grid"
+       print ("ERORR:")
+       print ("this script caluculates the difference grid and the second norm over the grid. ")
+       print ("syntex: dx-compare_2norm.py gist-Eww-dens.dx gist-gO.dx diff_grid")
        return
  
 
@@ -40,7 +40,7 @@ def main():
    new_values = dxlib.combine_values(outfile+'.dat',xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1,weight1,xn2,yn2,zn2,dx2,dy2,dz2,origin2,values2,weight2,const3)
    dxlib.write_out_dx_file(outfile+'.dx',xn1,yn1,zn1,dx1,dy1,dz1,origin1,new_values)
    norm = square_root_sum_of_squares(new_values)
-   print "norm = ", norm
+   print ("norm = ", norm)
 
 main()
 

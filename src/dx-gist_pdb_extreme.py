@@ -70,14 +70,14 @@ def get_extreme(fileprefix,values,gridscale,xn,yn,zn,origin,threshold):
            countno0 = countno0 + 1
     mean = sum1/lenv
     std  = (sum2/lenv - mean**2.0)**(1.0/2.0)
-    print "mean1=%f,mean2=%f,mean3=%f"%(sum1/lenv,sum2/lenv,sum3/lenv)
-    print "mean=%f,standdev=%f"%(mean,std)
+    print ("mean1=%f,mean2=%f,mean3=%f"%(sum1/lenv,sum2/lenv,sum3/lenv))
+    print ("mean=%f,standdev=%f"%(mean,std))
 
     meanno0 = sum1no0/countno0
     stdno0  = (sum2no0/countno0 - meanno0**2.0)**(1.0/2.0)
-    print "non-zero points = %d"%countno0
-    print "no0:mean1=%f,mean2=%f,mean3=%f"%(sum1no0/countno0,sum2no0/countno0,sum3no0/countno0)
-    print "no0:mean=%f,standdev=%f"%(meanno0,stdno0)
+    print ("non-zero points = %d"%countno0)
+    print ("no0:mean1=%f,mean2=%f,mean3=%f"%(sum1no0/countno0,sum2no0/countno0,sum3no0/countno0))
+    print ("no0:mean=%f,standdev=%f"%(meanno0,stdno0))
 
     val    = 5.0
     countp = 0 # above mu + val* sigma
@@ -90,11 +90,11 @@ def get_extreme(fileprefix,values,gridscale,xn,yn,zn,origin,threshold):
            countm = countm+1
         else:
            countb = countb+1
-    print "mu-%dsigma = %f"%(val,(mean-val*std))
-    print "mu+%dsigma = %f"%(val,(mean+val*std))
-    print "below mu-%dsigma = %d"%(int(val),countm)
-    print "above mu+%dsigma = %d"%(int(val),countp)
-    print "between mu+-%dsigma = %d"%(int(val),countb)
+    print ("mu-%dsigma = %f"%(val,(mean-val*std))       )
+    print ("mu+%dsigma = %f"%(val,(mean+val*std))       )
+    print ("below mu-%dsigma = %d"%(int(val),countm)    )
+    print ("above mu+%dsigma = %d"%(int(val),countp)    )
+    print ("between mu+-%dsigma = %d"%(int(val),countb) )
     # here the vector of values is transformed to a multidemitional array (grid)
     grid_old = [] 
     count = 0
@@ -121,7 +121,7 @@ def get_extreme(fileprefix,values,gridscale,xn,yn,zn,origin,threshold):
             for k in range(zn):
                 z = (k * gridscale) + origin[2] 
                 if (grid_old[i][j][k] > threshold or grid_old[i][j][k] < (-1.0 * threshold)): # sign in the comparison with Threshold. 
-                    print i,j,k, x,y,z, grid_old[i][j][k]
+                    print (i,j,k, x,y,z, grid_old[i][j][k])
                     point = Point(x,y,z,i,j,k,grid_old[i][j][k],1)
                     points.append(point)
                 if (maxval < grid_old[i][j][k]):
@@ -129,8 +129,8 @@ def get_extreme(fileprefix,values,gridscale,xn,yn,zn,origin,threshold):
                 if (minval > grid_old[i][j][k]):
                     minval =  grid_old[i][j][k]
                 
-    print "max value: %f"%(maxval)
-    print "min value: %f"%(minval)
+    print ("max value: %f"%(maxval))
+    print ("min value: %f"%(minval))
     write_pdb(points,fileh)
 
     fileh.close()
@@ -143,12 +143,12 @@ def get_extreme(fileprefix,values,gridscale,xn,yn,zn,origin,threshold):
 def main():
 
    if len(sys.argv) != 4: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_extreme.py dx-input-file cutoff pdb-output-file"
-       print "cutoff can only be a positive floating point number. "
-       print "                     this point is used to deterint clusters of points" 
-       print "dx-input-file input file in dx formate produed by gist, may be disities or energies"
-       print "pdb-output-file is an output file in pdb formate contains the weighted mean poition of clusters"
+       print ("ERORR:"                                                                                          )
+       print ("syntex: dx-gist_extreme.py dx-input-file cutoff pdb-output-file"                                 )
+       print ("cutoff can only be a positive floating point number. "                                           )
+       print ("                     this point is used to deterint clusters of points"                          )
+       print ("dx-input-file input file in dx formate produed by gist, may be disities or energies"             )
+       print ("pdb-output-file is an output file in pdb formate contains the weighted mean poition of clusters" )
        return
  
 

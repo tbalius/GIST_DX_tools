@@ -5,9 +5,10 @@ import dx_gist_lib as dxlib
 # this is written by Trent Balius in the Shoichet Lab
 # written in Oct, 2014
 # modifed by Reed Stein, 2016
+# modified in Jan, 2025
 #
-# here we read in, manpulate and output dx file.
-# the dx file are produed by GIST calculations.
+# here we read in sites with a value, manpulate and output dx file.
+# the sites file are produed by  GIST calculations.
 
 # We place an sphere at each grid point. 
 # rows and columns for which the sphere is not completely 
@@ -21,24 +22,16 @@ import dx_gist_lib as dxlib
 # this function compute the atomic displacement grids.  
 ######################################################################
 
-def pre_compute(file,xn,yn,zn,dx,dy,dz,origin,values,radius,divider,pad_radius):
+# pre compute displacement from sites
+def pre_compute_site(file1,sx,sy,sz,svalue,xn,yn,zn,dx,dy,dz,origin,radius,divider):
 #   print " in pre_compute "
 # file - log file
 # values gist values 
 # gridscale - the grid spacing
 # radius - sphere radius
 
-    fileh = open(file,'w')
+    fileh = open(file1,'w')
 
-    padx = math.ceil(pad_radius/dx)
-    pady = math.ceil(pad_radius/dy)
-    padz = math.ceil(pad_radius/dz)
-
-    if not ( padx == pady and pady == padz and padx == padz):
-       print ("dx, dy and dz are not the same: ", dx, dy, dz)
-       exit()
-
-    pad = int(padx)
     gspace = dx
 
     # convert array to grid
@@ -54,61 +47,59 @@ def pre_compute(file,xn,yn,zn,dx,dy,dz,origin,values,radius,divider,pad_radius):
             matrix.append(row)
         grid.append(matrix)
 
-    index = 0
-    for i in range(xn):
-        for j in range(yn):
-            for k in range(zn):
-                grid[i][j][k] = values[index]
-                index = index + 1
     
+    if (len(sx)!=len(sy) or len(sx)!=len(sz) or len(sx)!=len(svalue)):
+        print("Error. ")
+        exit()
 
-    # transform grid to precomput grid
-    ngrid = []
-    for i in range(xn-2*pad):
-        matrix = []
-        for j in range(yn-2*pad):
-            row = []
-            for k in range(zn-2*pad):
-                row.append(0)
-            matrix.append(row)
-        ngrid.append(matrix)
+    sN = len(sx)
 
-    for i in range(xn-2*pad):
-        for j in range(yn-2*pad):
-            for k in range(zn-2*pad):
-                oldgi = i + pad 
-                oldgj = j + pad 
-                oldgk = k + pad
-                centerind = [oldgi, oldgj, oldgk]
-                points,dist = get_points_in_Sph(origin,xn,yn,zn,gspace,centerind,radius) 
-                for indp,p in enumerate(points):
-                    scale = cal_gausian(dist[indp],(radius/divider)) 
-                    #print "I AM HERE ",indp,dist[indp],scale
-                    ngrid[i][j][k] = ngrid[i][j][k]  + scale*grid[p[0]][p[1]][p[2]]
-		#    if scale*grid[p[0]][p[1]][p[2]] > 0.0:
-		#	print "indices are", (p[0], p[1], p[2])
-		#	print "scale is",scale
-		#	print "distance is", dist[indp]
-		#	print "new_val is", scale*grid[p[0]][p[1]][p[2]]
-		#	print "orig_val is", grid[p[0]][p[1]][p[2]]
+    corner = [0.0, 0.0, 0.0]
+
+    #corner[0] = origin[0] - (xn * dx / 2.0)
+    #corner[1] = origin[1] - (yn * dy / 2.0)
+    #corner[2] = origin[2] - (zn * dz / 2.0)
+    corner[0] = origin[0] 
+    corner[1] = origin[1] 
+    corner[2] = origin[2] 
+    fileh.write('origin = %f, %f, %f\n'%(origin[0],origin[1],origin[2]))
+    fileh.write('corner = %f, %f, %f\n'%(corner[0],corner[1],corner[2]))
+
+    # compute grid from sites
+    for si in range(sN):
+      # find closed grid point
+      fileh.write('site x,y,z coordenate = %f, %f, %f\n'%(sx[si],sy[si],sz[si]))
+      gi = round((sx[si] - corner[0])/dx)
+      gj = round((sy[si] - corner[1])/dy)
+      gk = round((sz[si] - corner[2])/dz)
+      fileh.write('site grid point position i,j,k = = %d, %d, %d\n'%(gi,gj,gk))
+      centerind = [gi, gj, gk]
+      centercord = [sx[si],sy[si],sz[si]]
+      points,dist = get_points_in_Sph(origin,xn,yn,zn,gspace,centerind,centercord,radius) 
+      #points,dist = get_points_in_Sph(origin,xn,yn,zn,gspace,centerind,2*radius) # get more points 
+      for indp,p in enumerate(points):
+         scale = cal_gausian(dist[indp],(radius/divider)) 
+         print(p)
+         #grid[i][j][k] = grid[i][j][k]  + scale*grid[p[0]][p[1]][p[2]]
+         grid[p[0]][p[1]][p[2]] = grid[p[0]][p[1]][p[2]] + scale*svalue[si]
 
     # convert new grid to array
     nvalues = []
 
     index = 0
-    for i in range(xn-2*pad):
-        for j in range(yn-2*pad):
-            for k in range(zn-2*pad):
-                  nvalues.append(ngrid[i][j][k])
+    for i in range(xn):
+        for j in range(yn):
+            for k in range(zn):
+                  nvalues.append(grid[i][j][k])
 
-    new_xn = xn-2*pad
-    new_yn = yn-2*pad
-    new_zn = zn-2*pad
+    new_xn = xn
+    new_yn = yn
+    new_zn = zn
     
     new_origin = [ 0.0, 0.0, 0.0]
-    new_origin[0] = origin[0] + gspace*pad
-    new_origin[1] = origin[1] + gspace*pad
-    new_origin[2] = origin[2] + gspace*pad
+    new_origin[0] = origin[0] 
+    new_origin[1] = origin[1]
+    new_origin[2] = origin[2] 
 
     fileh.close()
     return new_xn,new_yn,new_zn,new_origin,nvalues
@@ -162,7 +153,7 @@ def get_neighbors(cgpind):
     
 
 ######################################
-def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
+def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,centercord,radius):
 #    print " IN get_points_in_Sph"
     #cgpind = [0.0, 0.0, 0.0]
     # center is the center of the sphere, in this it is a grid point already
@@ -195,14 +186,16 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
                continue
             # if point in taged
             #    continue
-            #point[0] = index[0] * gspace + origin[0]# transform to coordenates 
-            #point[1] = index[1] * gspace + origin[1] 
-            #point[2] = index[2] * gspace + origin[2] 
+            point[0] = index[0] * gspace + origin[0]# transform to coordenates 
+            point[1] = index[1] * gspace + origin[1] 
+            point[2] = index[2] * gspace + origin[2] 
             #if InSPH(center,radius,point):
-            if InSPH(centerind,(radius/gspace),index):
+            #if InSPH(centerind,(radius/gspace),index):
+            if InSPH(centercord,radius,point):
                gpoints.append(index)
-               dist = calc_distance(centerind,index)
-               dist = gspace * dist  # converts from grid point to angstroms. 
+               #dist = calc_distance(centerind,index)
+               #dist = gspace * dist  # converts from grid point to angstroms. 
+               dist = calc_distance(centercord,point)
                distances.append(dist)
                #if index in niegh_new:
                #   print "index in niegh_new"
@@ -226,8 +219,9 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
                    niegh_new.append(nb)
         nieghbors = niegh_new
         size = len(nieghbors)
-        #print "size =", size
-        #print "size of points = ", len(gpoints)
+        print ("size =", size)
+        print ("size of points = ", len(gpoints))
+        print (gpoints[0])
         
         if len(gpoints)>400:
            #print "len(gpoints)>400"
@@ -267,39 +261,109 @@ def write_pdb_threshold(file,xn,yn,zn,values,origin,dx,dy,dz):
     fileh.close()
 
 ##########################################
+def read_in_site_file(infile1,margin):
+
+    fh = open(infile1,'r')
+    x = [];y=[];z=[];v=[]
+    gcenter1 = [0.0,0.0,0.0]
+    maxcorner = [0.0,0.0,0.0]
+    mincorner = [1000.0,1000.0,1000.0]
+    for line in fh:
+        sline = line.split()
+        tx=float(sline[0])
+        ty=float(sline[1])
+        tz=float(sline[2])
+        tv=float(sline[3])
+        x.append(tx)
+        y.append(ty)
+        z.append(tz)
+        v.append(tv)
+        gcenter1[0] = gcenter1[0] + tx
+        gcenter1[1] = gcenter1[1] + ty
+        gcenter1[2] = gcenter1[2] + tz
+        if (maxcorner[0] < tx):
+            maxcorner[0] = tx
+        if (maxcorner[1] < ty):
+            maxcorner[1] = ty
+        if (maxcorner[2] < tz):
+            maxcorner[2] = tz
+
+        if (mincorner[0] > tx):
+            mincorner[0] = tx
+        if (mincorner[1] > ty):
+            mincorner[1] = ty
+        if (mincorner[2] > tz):
+            mincorner[2] = tz
+
+    N = len(x)
+    gcenter1[0] = gcenter1[0]/float(N) 
+    gcenter1[1] = gcenter1[1]/float(N) 
+    gcenter1[2] = gcenter1[2]/float(N) 
+    print("center=",gcenter1[0],gcenter1[1],gcenter1[2])
+       
+ 
+    gdx1 = 0.5; gdy1 = 0.5; gdz1 = 0.5
+
+    maxcorner[0] = maxcorner[0]+margin
+    maxcorner[1] = maxcorner[1]+margin
+    maxcorner[2] = maxcorner[2]+margin
+
+    mincorner[0] = mincorner[0]-margin
+    mincorner[1] = mincorner[1]-margin
+    mincorner[2] = mincorner[2]-margin
+
+    #gorigin1 = mincorner
+    gorigin1 = [0.0, 0.0, 0.0]
+    gorigin1[0] = round(mincorner[0],4)
+    gorigin1[1] = round(mincorner[1],4)
+    gorigin1[2] = round(mincorner[2],4)
+
+    print("origin=",gorigin1[0],gorigin1[1],gorigin1[2])
+
+    diffx = maxcorner[0] - mincorner[0]
+    diffy = maxcorner[1] - mincorner[1]
+    diffz = maxcorner[2] - mincorner[2]
+
+    gxn1 = math.ceil(diffx/gdx1)
+    gyn1 = math.ceil(diffy/gdy1)
+    gzn1 = math.ceil(diffz/gdz1)
+    print("xn,yn,zn=",gxn1,gyn1,gzn1)
+ 
+
+    return x,y,z,v,gxn1,gyn1,gzn1,gdx1,gdy1,gdz1,gorigin1
+##########################################
+##########################################
 
 def main():
 
    if len(sys.argv) != 6: # if no input
        print ("ERORR:")
-       print ("syntex: dx-gist_precalculate_sphere.py infile sphradius divider pad_radius outfileprefix")
+       print ("syntex: site_to_dx-gist_precalculate_sphere.py infile margin sphradius divider outfileprefix")
        print ("divider is used to calculate sigma:  sigma = radius/divider ")
-       print ("pad_radius this is the amount the grid is reduced in all directions.  pad_radius should be larger than sphradius. ")
        return
  
 
    infile1 = sys.argv[1]
-   sphradius = float(sys.argv[2])
-   divider = float(sys.argv[3])
-   pad_radius = float(sys.argv[4])
+   margin = float(sys.argv[2])
+   sphradius = float(sys.argv[3])
+   divider = float(sys.argv[4])
    outfile = sys.argv[5]
 
-   if (pad_radius < sphradius): 
-       print ("warning pap_radius (%f) is less than sphradius (%f).\n" % (pad_radius,sphradius))
+   if ( margin < sphradius): 
+       print ("warning margin (%f) is less than sphradius (%f).\n" % (margin,sphradius))
        print ("This might cause boundary problems.\n")
 
    print (infile1)
    print (sphradius)
    print (divider)
-   print (pad_radius)
    print (outfile)
 
    #exit()
 
-   xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1 = dxlib.read_in_dx_file(infile1)
+   x,y,z,value,xn1,yn1,zn1,dx1,dy1,dz1,origin1 = read_in_site_file(infile1,margin)
    #write_pdb_threshold(outfile+'old.pdb',xn1,yn1,zn1,values1,origin1,dx1,dy1,dz1)
 
-   new_xn,new_yn,new_zn,new_origin,nvalues = pre_compute(outfile+'.dat',xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1,sphradius,divider,pad_radius)
+   new_xn,new_yn,new_zn,new_origin,nvalues = pre_compute_site(outfile+'.dat',x,y,z,value,xn1,yn1,zn1,dx1,dy1,dz1,origin1,sphradius,divider)
 
    dxlib.write_out_dx_file(outfile+'.dx',new_xn,new_yn,new_zn,dx1,dy1,dz1,new_origin,nvalues)
 

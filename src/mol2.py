@@ -163,14 +163,14 @@ def read_Mol2_lines(lines,startline):
                  flag_nextmol = False
                  #atom_list = [];bond_list = []
                  #if (lnum != startline):
-                 print lnum, startline 
+                 print (lnum, startline) 
                  break
  
     ## we are reading in one molecule at a time
     ID_heavy_atoms(atom_list)
     data = Mol('',Name,atom_list,bond_list,residue_list)
     atom_list = [];bond_list = []
-    print "flag_mol_set", flag_mol_set 
+    print ("flag_mol_set", flag_mol_set )
 
     return flag_mol_set, data, lnum
 
@@ -606,12 +606,12 @@ def convert_sybyl_to_dock (molecule):
                  break # hydrogens are only attached to on atom. 
          if hflag:
             if molecule.atom_list[j-1].type in [ 'C.1', 'C.3', 'C.2', 'C.ar', 'C.cat']:
-               print i, atom.type, j, molecule.atom_list[j-1].type
+               print (i, atom.type, j, molecule.atom_list[j-1].type)
                type = 'H-C'
             #else: 
             #   type = atom.type
          else: 
-            print "ERROR."
+            print ("ERROR.")
             exit()
       #else:
       #   type = atom.type
@@ -636,7 +636,7 @@ def ID_heavy_atoms(atom_list):
 #################################################################################################################
 def distance2_vec(vector1,vector2):
         if (len(vector1)!=len(vector2)):
-                print 'function distance(): vectors differ in length'
+                print ('function distance(): vectors differ in length')
                 sys.exit(1)
         distance2 = 0
         for i in range(len(vector1)):

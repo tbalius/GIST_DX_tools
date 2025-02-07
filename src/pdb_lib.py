@@ -68,7 +68,7 @@ def read_pdb(pdb_file):
                    chain_list.append(temp_atom_list)
                    temp_atom_list = []
          else:
-            print "there is a empty line in "+pdb_file+" that might cause problems"
+            print ("there is a empty line in "+pdb_file+" that might cause problems")
             linesplit = [""]
 
     if not (linesplit[0] == "TER" or linesplit[0] == "END"):
@@ -111,7 +111,7 @@ def cal_dists_not_close(pdb1,pdb2):
         for atom2 in pdb2:
             d2 = (atom1.X - atom2.X)**2 + (atom1.Y - atom2.Y)**2 + (atom1.Z - atom2.Z)**2
             if d2 <= (1.4)**2.0:
-               print d2
+               print (d2)
                atombool[i] = False
             i = i + 1
 
@@ -190,10 +190,10 @@ def cal_dists_TP_FP_FN(pdb1,pdb2):
         else:
             FP2 = FP2+1
 
-    print "TP1 = "+str(TP1) 
-    print "TP2 = "+str(TP2) 
-    print "FN1 = "+str(FN1) 
-    print "FP2 = "+str(FP2) 
+    print ("TP1 = "+str(TP1)) 
+    print ("TP2 = "+str(TP2)) 
+    print ("FN1 = "+str(FN1)) 
+    print ("FP2 = "+str(FP2)) 
 
     return 
 

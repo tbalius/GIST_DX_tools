@@ -28,7 +28,7 @@ def read_in_dx_file(file):
           
       ## this should be line 1
       if (splitline[0] == "object" and splitline[1] == "1"):
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          xn = int(splitline[5])
          yn = int(splitline[6])
          zn = int(splitline[7])
@@ -36,37 +36,37 @@ def read_in_dx_file(file):
       ## this should be line 2       
       if (splitline[0] == "origin"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          origin = [float(splitline[1]), float(splitline[2]), float(splitline[3])] 
 
       ## this should be lines 3-5
       if (splitline[0] == "delta"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          if (float(splitline[2]) == 0 and  float(splitline[3]) ==0):
             dx = float(splitline[1]) 
          elif (float(splitline[1]) == 0 and  float(splitline[3]) ==0):
             dy = float(splitline[2]) 
          elif (float(splitline[1])== 0 and  float(splitline[2])==0):
             dz = float(splitline[3]) 
-            print dx, dy, dz 
+            print (dx, dy, dz )
 
 
       if (splitline[0] == "object" and splitline[1] == "2"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
       elif (splitline[0] == "object" and splitline[1] == "3"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          flag_read_dx = True
          continue # go to next line
       elif (splitline[0] == "object" ):
-         print " line = ", line
+         print (" line = ", line)
          continue
       if (flag_read_dx):
 
          if (len(splitline) > 3): 
-            print "Error: dx formate problem. more than 3 colums"
+            print ("Error: dx formate problem. more than 3 colums")
             exit()
 
          for value in splitline:
@@ -75,7 +75,7 @@ def read_in_dx_file(file):
       count = count + 1
 
 
-  print len(values)
+  print (len(values))
   fileh.close()
   return xn,yn,zn,dx,dy,dz,origin,values 
 
@@ -128,10 +128,10 @@ def combine_values(file,xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1,w1,xn2,yn2,zn2,d
     if ( (xn1 != xn2) or (yn1 != yn2) or (zn1 != zn2) or (dx1 != dx2)
           or (dy1 != dy2) or (dz1 != dz2) or (origin1[0] != origin2[0])
           or (origin1[1] != origin2[1]) or (origin1[2] != origin2[2])):
-       print "header does not match"
+       print ("header does not match")
     if (len(values1) != len(values2)):
-       print "the values don't have the same number of elements."
-       print len(values1), len(values2)
+       print ("the values don't have the same number of elements.")
+       print (len(values1), len(values2))
 
     fileh = open(file,'w')
 
@@ -163,10 +163,10 @@ def combine_values_density_threshold(file,xn1,yn1,zn1,dx1,dy1,dz1,origin1,values
     if ( (xn1 != xn2) or (yn1 != yn2) or (zn1 != zn2) or (dx1 != dx2)
           or (dy1 != dy2) or (dz1 != dz2) or (origin1[0] != origin2[0]) 
           or (origin1[1] != origin2[1]) or (origin1[2] != origin2[2])):
-       print "header does not match"
+       print ("header does not match")
     if (len(values1) != len(values2)):
-       print "the values don't have the same number of elements."
-       print len(values1), len(values2)
+       print ("the values don't have the same number of elements.")
+       print (len(values1), len(values2))
 
     fileh = open(file,'w')
 
@@ -191,10 +191,10 @@ def combine_values_energy_density_thresholds(file,xn1,yn1,zn1,dx1,dy1,dz1,origin
     if ( (xn1 != xn2) or (yn1 != yn2) or (zn1 != zn2) or (dx1 != dx2)
           or (dy1 != dy2) or (dz1 != dz2) or (origin1[0] != origin2[0])
           or (origin1[1] != origin2[1]) or (origin1[2] != origin2[2])):
-       print "header does not match"
+       print ("header does not match")
     if (len(values1) != len(values2)):
-       print "the values don't have the same number of elements."
-       print len(values1), len(values2)
+       print ("the values don't have the same number of elements.")
+       print (len(values1), len(values2))
 
     fileh = open(file,'w')
 
@@ -223,10 +223,10 @@ def divide_energy_density(file,xn1,yn1,zn1,dx1,dy1,dz1,origin1,values1,xn2,yn2,z
     if ( (xn1 != xn2) or (yn1 != yn2) or (zn1 != zn2) or (dx1 != dx2)
           or (dy1 != dy2) or (dz1 != dz2) or (origin1[0] != origin2[0])
           or (origin1[1] != origin2[1]) or (origin1[2] != origin2[2])):
-       print "header does not match"
+       print ("header does not match")
     if (len(values1) != len(values2)):
-       print "the values don't have the same number of elements."
-       print len(values1), len(values2)
+       print ("the values don't have the same number of elements.")
+       print (len(values1), len(values2))
 
     #print C_num_dens
 

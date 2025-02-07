@@ -12,9 +12,9 @@ import dx_gist_lib as dxlib
 def main():
 
    if len(sys.argv) != 5: # if no input
-       print "ERORR:"
-       print "syntex: dx-divide_grids.py gist-Eww-dens.dx gist-gO.dx 0.0329 temp"
-       print "v[i] = v1[i] / (w2*v2[i]) "
+       print ("ERORR:")
+       print ("syntex: dx-divide_grids.py gist-Eww-dens.dx gist-gO.dx 0.0329 temp")
+       print ("v[i] = v1[i] / (w2*v2[i]) ")
        return
  
 

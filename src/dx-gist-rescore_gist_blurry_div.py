@@ -22,7 +22,7 @@ def intialize_vdw_parm(vdwfile):
            r = 0.5
         else: 
            r = (math.sqrt(2.0)*a/b)**(1.0/3.0)/2.0 # radius
-        print t,a,b,r
+        print (t,a,b,r)
         #vdw_dict[t] = round(r,3)
         vdw_dict[t] = r
     return vdw_dict
@@ -52,7 +52,7 @@ def read_in_dx_file(file):
 
       ## this should be line 1
       if (splitline[0] == "object" and splitline[1] == "1"):
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          xn = int(splitline[5])
          yn = int(splitline[6])
          zn = int(splitline[7])
@@ -60,34 +60,34 @@ def read_in_dx_file(file):
       ## this should be line 2       
       if (splitline[0] == "origin"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          origin = [float(splitline[1]), float(splitline[2]), float(splitline[3])] 
 
       ## this should be lines 3-5
       if (splitline[0] == "delta"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          if (float(splitline[2]) == 0 and  float(splitline[3]) ==0):
             dx = float(splitline[1]) 
          elif (float(splitline[1]) == 0 and  float(splitline[3]) ==0):
             dy = float(splitline[2]) 
          elif (float(splitline[1])== 0 and  float(splitline[2])==0):
             dz = float(splitline[3]) 
-            print dx, dy, dz 
+            print (dx, dy, dz )
 
 
       if (splitline[0] == "object" and splitline[1] == "2"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
       if (splitline[0] == "object" and splitline[1] == "3"):
          #print line
-         print "count = ", count, " line = ", line
+         print ("count = ", count, " line = ", line)
          flag_read_dx = True
          continue # go to next line
       if (flag_read_dx):
 
          if (len(splitline) > 3): 
-            print "Error: dx formate problem. more than 3 colums"
+            print ("Error: dx formate problem. more than 3 colums")
             exit()
 
          for value in splitline:
@@ -96,7 +96,7 @@ def read_in_dx_file(file):
       count = count + 1
 
 
-  print len(values)
+  print (len(values))
   fileh.close()
   return xn,yn,zn,dx,dy,dz,origin,values 
 
@@ -143,7 +143,7 @@ def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
-       print "error" 
+       print ("error" )
        exit()
     dist = 0.0
     for i in range(len(v1)):
@@ -187,7 +187,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
 
     mol_name = mol.name
     if Hchoice !=0 and Hchoice !=1 and Hchoice !=2: 
-       print "Hchoice must be 0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)"
+       print ("Hchoice must be 0(use standard radius), 1 (use 0.8 for nonpolar H, instead of 1.540), or 2 (ignore H)")
        exit()
 
     dt   = mol2.convert_sybyl_to_dock(mol) # get dock atom types.
@@ -216,7 +216,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
         grid_k = round((atom.Z - origin[2] ) / gridscale)
 
         if (grid_i<0.0 or grid_j<0.0 or grid_k<0.0):
-           print "ERROR. . . "
+           print ("ERROR. . . ")
            exit()
 
         radius_gridpoint = math.ceil(radius / gridscale) + 1
@@ -296,7 +296,7 @@ def calc_score(fileprefix,values,gridscale,xn,yn,zn,origin,mol,vdw_dict,fileh,re
 		sum_val = sum_val + -1.*values[key]*scale
         #print ("key %d (%d) : val = %f, grid_val = %f"%(key,len(dict_gridpoint[key]),key_sum,values[key])) 
 
-    print "gist_val:", sum_val*voxel_vol
+    print ("gist_val:", sum_val*voxel_vol)
     
     fileh.write('%f\n'%(sum_val*voxel_vol))
 
@@ -352,8 +352,8 @@ def main():
    div           = float(sys.argv[4])
    outfile       = sys.argv[5]
 
-   print infiledx
-   print infilemol2
+   print (infiledx)
+   print (infilemol2)
 
    #vdwdict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
    #vdwdict = intialize_vdw_parm('/home/baliuste/zzz.github/DOCK/ucsfdock/proteins/defaults/vdw.parms.amb.mindock') 

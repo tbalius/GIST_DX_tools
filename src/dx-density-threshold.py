@@ -12,10 +12,10 @@ import dx_gist_lib as dxlib
 def main():
 
    if len(sys.argv) != 5: # if no input
-       print "ERORR:"
-       print "syntex: dx-combine_grids.py gist-Eww-dens.dx gist-gO.dx 10.0 temp"
-       print "v[i] = {v1[i], if v2[i]>t or 0, if v2[i]<t"
-       print "v1 is energey, v2 is the density, t is the threshold that must be exceded."
+       print ("ERORR:")
+       print ("syntex: dx-combine_grids.py gist-Eww-dens.dx gist-gO.dx 10.0 temp")
+       print ("v[i] = {v1[i], if v2[i]>t or 0, if v2[i]<t")
+       print ("v1 is energey, v2 is the density, t is the threshold that must be exceded.")
        return
  
 

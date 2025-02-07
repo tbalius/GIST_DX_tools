@@ -10,7 +10,7 @@ import dx_gist_lib as dxlib
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
-       print "error" 
+       print ("error" )
        exit()
     dist = 0.0
     for i in range(len(v1)):
@@ -35,7 +35,7 @@ def cal_grid(values,gridscale,xn,yn,zn,origin):
 
 
 def cal_box_min_max(box,pad):
-    print len(box)
+    print (len(box))
     #maxv = [box.atoms[0].X, box.atoms[0].Y, box.atoms[0].Z]
     #minv = [box.atoms[0].X, box.atoms[0].Y, box.atoms[0].Z]
     maxv = [box[0].X, box[0].Y, box[0].Z]
@@ -128,9 +128,9 @@ def main():
 
 
    if len(sys.argv) != 5: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_bounding_box.py dx-file box.pdb pad output"
-       print "dx-input-file input file in dx formate produed by gist, may be disities or energies"
+       print ("ERORR:")
+       print ("syntex: dx-gist_bounding_box.py dx-file box.pdb pad output")
+       print ("dx-input-file input file in dx formate produed by gist, may be disities or energies")
        return
  
 

@@ -35,7 +35,7 @@ def pre_compute(file,xn,yn,zn,dx,dy,dz,origin,values,radius):
     padz = math.ceil(radius/dz)
 
     if not ( padx == pady and pady == padz and padx == padz):
-       print "dx, dy and dz are not the same: ", dx, dy, dz
+       print ("dx, dy and dz are not the same: ", dx, dy, dz)
        exit()
 
     pad = int(padx)
@@ -141,14 +141,14 @@ def get_neighbors(cgpind):
 
 ######################################
 def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
-    print " IN get_points_in_Sph"
+    print (" IN get_points_in_Sph")
     #cgpind = [0.0, 0.0, 0.0]
     # center is the center of the sphere, in this it is a grid point already
     #cgpind[0] = round((center[0]-origin[0])/nx) # closesed gridpoint index
     #cgpind[1] = round((center[1]-origin[1])/ny) # closesed gridpoint index
     #cgpind[2] = round((center[2]-origin[2])/nz) # closesed gridpoint index
 
-    print origin,nx,ny,nz,gspace,centerind,radius
+    print (origin,nx,ny,nz,gspace,centerind,radius)
 
     #center = [0.0,0.0,0.0]
     #center[0] = centerind[0] * gspace + origin[0]
@@ -161,7 +161,7 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
     nieghbors = []
     nieghbors = nieghbors + get_neighbors(centerind) # combine list
     size = len(nieghbors)
-    print "size =", size
+    print ("size =", size)
     # while we still have neighbors to get.
     point = [0.0, 0.0, 0.0] 
     
@@ -200,14 +200,14 @@ def get_points_in_Sph(origin,nx,ny,nz,gspace,centerind,radius):
                    niegh_new.append(nb)
         nieghbors = niegh_new
         size = len(nieghbors)
-        print "size =", size
-        print "size of points = ", len(gpoints)
+        print ("size =", size)
+        print ("size of points = ", len(gpoints))
         
         #for nb in niegh_new:
         #for nb in gpoints:
         #    print nb
         if len(gpoints)>400:
-           print "len(gpoints)>400"
+           print ("len(gpoints)>400")
            exit()
 
     return gpoints
@@ -248,8 +248,8 @@ def write_pdb_threshold(file,xn,yn,zn,values,origin,dx,dy,dz):
 def main():
 
    if len(sys.argv) != 4: # if no input
-       print "ERORR:"
-       print "syntex: dx-gist_precalculate_sphere.py infile sphradius outfileprefix"
+       print ("ERORR:")
+       print ("syntax: dx-gist_precalculate_sphere.py infile sphradius outfileprefix")
        return
  
 
@@ -257,9 +257,9 @@ def main():
    sphradius = float(sys.argv[2])
    outfile = sys.argv[3]
 
-   print infile1
-   print sphradius
-   print outfile
+   print (infile1)
+   print (sphradius)
+   print (outfile)
 
    #exit()
 
